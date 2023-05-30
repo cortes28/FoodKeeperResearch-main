@@ -1,0 +1,137 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[1]:
+
+
+import pandas as pd
+
+
+# In[2]:
+
+
+df = pd.read_excel('data/FoodKeeper-Data copy.xls', sheet_name = 'Product')
+
+
+# In[3]:
+
+
+def getRow(dfName, foodName):
+    counter = 0;
+    while counter < 662:
+        f = dfName['Name'].iloc[counter]
+        if f == foodName:
+            index = counter;
+            break
+        counter = counter + 1
+    return index
+
+
+def isNaN(string):
+    return string != string
+
+
+# In[4]:
+
+
+def foodDictionary(dfName, foodName):
+    indexes = getRow(dfName, foodName)
+    dictionary = {
+        "Name":  df['Name'].iloc[indexes],
+        "Pantry_Min": df['Pantry_Min'].iloc[indexes],
+        "Pantry_Max": df['Pantry_Max'].iloc[indexes],
+        "Pantry_Metric": df['Pantry_Metric'].iloc[indexes],
+        "Pantry_tips": df['Pantry_tips'].iloc[indexes],
+        "DOP_Pantry_Min": df['DOP_Pantry_Min'].iloc[indexes],
+        "DOP_Pantry_Max": df['DOP_Pantry_Max'].iloc[indexes],
+        "DOP_Pantry_Metric": df['DOP_Pantry_Metric'].iloc[indexes],
+        "DOP_Pantry_tips": df['DOP_Pantry_tips'].iloc[indexes],
+        "Pantry_After_Opening_Min": df['Pantry_After_Opening_Min'].iloc[indexes],
+        "Pantry_After_Opening_Max": df['Pantry_After_Opening_Max'].iloc[indexes],
+        "Pantry_After_Opening_Metric": df['Pantry_After_Opening_Metric'].iloc[indexes],
+        "Refrigerate_Min": df['Refrigerate_Min'].iloc[indexes],
+        "Refrigerate_Max": df['Refrigerate_Max'].iloc[indexes],
+        "Refrigerate_Metric": df['Refrigerate_Metric'].iloc[indexes],
+        "Refrigerate_tips": df['Refrigerate_tips'].iloc[indexes],
+        "DOP_Refrigerate_Min": df['DOP_Refrigerate_Min'].iloc[indexes], 
+        "DOP_Refrigerate_Max": df['DOP_Refrigerate_Max'].iloc[indexes], 
+        "DOP_Refrigerate_Metric": df['DOP_Refrigerate_Metric'].iloc[indexes], 
+        "DOP_Refrigerate_tips": df['DOP_Refrigerate_tips'].iloc[indexes], 
+        "Refrigerate_After_Opening_Min": df['Refrigerate_After_Opening_Min'].iloc[indexes],
+        "Refrigerate_After_Opening_Max": df['Refrigerate_After_Opening_Max'].iloc[indexes],
+        "Refrigerate_After_Opening_Metric": df['Refrigerate_After_Opening_Metric'].iloc[indexes],
+        "Refrigerate_After_Thawing_Min": df['Refrigerate_After_Thawing_Min'].iloc[indexes],
+        "Refrigerate_After_Thawing_Max": df['Refrigerate_After_Thawing_Max'].iloc[indexes],
+        "Refrigerate_After_Thawing_Metric": df['Refrigerate_After_Thawing_Metric'].iloc[indexes],
+        "Freeze_Min": df['Freeze_Min'].iloc[indexes],
+        "Freeze_Max": df['Freeze_Max'].iloc[indexes],
+        "Freeze_Metric": df['Freeze_Metric'].iloc[indexes],
+        "Freeze_Tips": df['Freeze_Metric'].iloc[indexes],
+        "DOP_Freeze_Min": df['DOP_Freeze_Min'].iloc[indexes],
+        "DOP_Freeze_Max": df['DOP_Freeze_Max'].iloc[indexes],
+        "DOP_Freeze_Metric": df['DOP_Freeze_Metric'].iloc[indexes],
+        "DOP_Freeze_Tips": df['DOP_Freeze_Tips'].iloc[indexes]
+    }
+    return dictionary
+
+
+# In[5]:
+
+
+def foodStorage(dfName, foodName, information):
+    dictionary = foodDictionary(dfName, foodName)
+    
+    if information == "Pantry" or information == "pantry":
+        if isNaN(dictionary["Pantry_Min"]) == False and isNaN(dictionary["Pantry_Max"]) == False:
+            return(foodName,"can be stored in the pantry for", dictionary["Pantry_Min"], "to", dictionary["Pantry_Max"], dictionary["Pantry_Metric"])
+        elif isNaN(dictionary["Pantry_tips"]) == False:
+            return("A pantry tip about", foodName, "is that it", dictionary["Pantry_tips"])
+        elif isNaN(dictionary["DOP_Pantry_Min"]) == False and isNaN(dictionary["DOP_Pantry_Max"]) == False:
+            return("The Date of Perish is from", dictionary["DOP_Pantry_Min"], "to", dictionary["DOP_Pantry_Max"], dictionary["DOP_Pantry_Metric"])
+        elif isNaN(dictionary["DOP_Pantry_tips"]) == False:
+            return("A tip on the Date of Perish for", foodName, "is", dictionary["DOP_Pantry_tips"])
+        elif isNaN(dictionary["Pantry_After_Opening_Min"]) == False and isNaN(dictionary["Pantry_After_Opening_Max"]) == False:
+            return("The", foodName, "can be stored in the pantry for", dictionary["Pantry_After_Opening_Min"], "to", dictionary["Pantry_After_Opening_Max"], "after opening") 
+        else:
+            return("No tips to give")
+
+    if information == "Refrigerate" or information == "refrigerate":
+        if isNaN(dictionary["Refrigerate_Min"]) == False and isNaN(dictionary["Refrigerate_Max"]) == False:
+            return(foodName, "can be stored in the refrigerator for", dictionary["Refrigerate_Min"], "to", dictionary["Refrigerate_Max"], dictionary["Refrigerate_Metric"])
+        elif isNaN(dictionary["Refrigerate_tips"]) == False:
+            return("A tip about refrigeration of", foodName, "is", dictionary["Refrigerate_tips"])
+        elif isNaN(dictionary["DOP_Refrigerate_Min"]) == False and isNaN(dictionary["DOP_Refrigerate_Max"]) == False:
+            return("The Date of Perish is from", dictionary["DOP_Refrigerate_Min"], "to", dictionary["DOP_Refrigerate_Max"], dictionary["DOP_Refrigerate_Metric"])
+        elif isNaN(dictionary["DOP_Refrigerate_tips"]) == False:
+            return("A tip about the Date of Perish is", dictionary["DOP_Refrigerate_tips"])
+        elif isNaN(dictionary["Refrigerate_After_Opening_Min"]) == False and isNaN(dictionary["Refrigerate_After_Opening_Max"]) == False:
+            return("The", foodName, "can be stored in the refrigerator for", dictionary["Refrigerate_After_Opening_Min"], "to", dictionary["Refrigerate_After_Opening_Max"], dictionary["Refrigerate_After_Opening_Metric"], "after opening")
+        elif isNaN(dictionary["Refrigerate_After_Thawing_Min"]) == False and isNaN(dictionary["Refrigerate_After_Thawing_Max"]) == False:
+            return(foodName, "can be stored in the refrigerator after thawing for", dictionary["Refrigerate_After_Thawing_Min"], "to", dictionary["Refrigerate_After_Thawing_Max"], dictionary["Refrigerate_After_Thawing_Metric"])
+        else:
+            return("No tips to give")
+
+    if information == "Freeze" or information == "freeze":
+        if isNaN(dictionary["Freeze_Min"]) == False and isNaN(dictionary["Freeze_Max"]) == False:
+            return(foodName, "can be freezed for", dictionary["Freeze_Min"], "to", dictionary["Freeze_Max"], dictionary["Freeze_Metric"])
+        elif isNaN(dictionary["Freeze_Tips"]) == False:
+            return("A tip for freezing for", foodName, "is that it's", dictionary["Freeze_Tips"])
+        elif isNaN(dictionary["DOP_Freeze_Min"]) == False and isNaN(dictionary["DOP_Freeze_Max"]) == False:
+            return("The Date of Perish is from", dictionary["DOP_Freeze_Min"], "to", dictionary["DOP_Freeze_Max"], dictionary["DOP_Freeze_Metric"])
+        elif isNaN(dictionary["DOP_Freeze_Tips"]) == False:
+            return("A tip on the Date of Perish for", foodName, "is", dictionary["DOP_Freeze_Tips"])
+        else:
+            return("No tips to give")
+
+
+# In[11]:
+
+
+foodStorage(df,"Butter", "freeze")
+
+
+# In[ ]:
+
+
+
+
